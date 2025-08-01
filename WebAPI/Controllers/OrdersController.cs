@@ -7,6 +7,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Paessler.Task.Model;
 using Paessler.Task.Model.Models;
+using MediatR;
+using Paessler.Task.Services.Handlers.Commands;
 
 namespace Paessler.Task.WebAPI.Controllers
 {
@@ -14,11 +16,10 @@ namespace Paessler.Task.WebAPI.Controllers
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
-        private readonly IMapper _mapper;
-
-        public OrderController(IMapper mapper)
+        private readonly IMediator _mediator;
+        public OrderController(IMediator mediator)
         {
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -27,7 +28,8 @@ namespace Paessler.Task.WebAPI.Controllers
         {
             try
             {
-                
+                var order = await _mediator.Send(new GetOrderByIdCommand { OrderId = id });
+                return Ok(order);
             }
             catch (Exception ex)
             {
@@ -42,6 +44,7 @@ namespace Paessler.Task.WebAPI.Controllers
             try
             {
                 // Logic to create an order
+                return Ok();
             }
             catch (Exception ex)
             {

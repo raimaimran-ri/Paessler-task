@@ -38,7 +38,7 @@ CREATE TABLE product_ordered (
     id int PRIMARY KEY DEFAULT nextval('product_ordered_id_seq'),
     order_id int NOT NULL,
     product_id int NOT NULL,
-    amount real NOT NULL,
+    amount int NOT NULL,
     total_price real NOT NULL,
     CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES "order"(id),
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES product(id)

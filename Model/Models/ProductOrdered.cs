@@ -11,7 +11,8 @@ namespace Paessler.Task.Model.Models
         public int id { get; set; }
         public int order_id { get; set; }
         public int product_id { get; set; }
-        public int quantity { get; set; }
+        public int amount { get; set; }
+        public float total_price { get; set; }
         public Order Order { get; set; }
         public Product Product { get; set; }
     }

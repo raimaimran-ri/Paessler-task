@@ -7,6 +7,6 @@ namespace Paessler.Task.Services.DTOs
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public float ProductPrice { get; set; }
-        public float ProductAmount { get; set; }
+        public int ProductAmount { get; set; }
     }
 }

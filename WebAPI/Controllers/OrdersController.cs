@@ -9,6 +9,7 @@ using Paessler.Task.Model;
 using Paessler.Task.Model.Models;
 using MediatR;
 using Paessler.Task.Services.Handlers.Commands;
+using Paessler.Task.Services.DTOs;
 
 namespace Paessler.Task.WebAPI.Controllers
 {
@@ -39,12 +40,12 @@ namespace Paessler.Task.WebAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<ActionResult<Order>> CreateOrder(Order order)
+        public async Task<IActionResult> CreateOrder(OrderDTO orderDTO)
         {
             try
             {
-                // Logic to create an order
-                return Ok();
+                var orderCreated = await _mediator.Send(new CreateOrderCommand { Order = orderDTO });
+                return CreatedAtAction(nameof(CreateOrder), new { id = orderCreated.OrderNumber }, new { id = orderCreated.OrderNumber });
             }
             catch (Exception ex)
             {

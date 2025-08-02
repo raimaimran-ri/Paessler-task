@@ -20,10 +20,9 @@ namespace Paessler.Task.Services.Handlers
 
         public async Task<OrderDTO> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var orderEntity = _mapper.Map<Order>(request.Order);
-            
+            var returnResult = await _repository.CreateOrderAsync(order: request.Order);
 
-            return _mapper.Map<OrderDTO>(new OrderDTO());
+            return _mapper.Map<OrderDTO>(returnResult);
         }
     }
 }

@@ -1,6 +1,10 @@
 using dotenv.net;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Identity.Web;
+using Paessler.Task.Model;
+using Paessler.Task.Services.Repositories;
+using Paessler.Task.Services.Repositories.IRepositories;
+using Paessler.Task.Services.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +31,13 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<PostgresContext>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddDataProtection();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 var app = builder.Build();
 

@@ -4,6 +4,7 @@ using Paessler.Task.Services.DTOs;
 using Paessler.Task.Services.Repositories.IRepositories;
 using MediatR;
 using AutoMapper;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace Paessler.Task.Services.Handlers
 {
@@ -11,10 +12,12 @@ namespace Paessler.Task.Services.Handlers
     {
         private readonly IOrderRepository _repository;
         private readonly IMapper _mapper;
-        public GetOrderByIdQueryHandler(IOrderRepository repository, IMapper mapper)
+        private readonly IDataProtector _dataProtector;
+        public GetOrderByIdQueryHandler(IOrderRepository repository, IMapper mapper, IDataProtectionProvider dataProtectionProvider)
         {
             _repository = repository;
             _mapper = mapper;
+            _dataProtector = dataProtectionProvider.CreateProtector("Customer");
         }
 
         public async Task<OrderDTO> Handle(GetOrderByIdCommand request, CancellationToken cancellationToken)
@@ -22,7 +25,9 @@ namespace Paessler.Task.Services.Handlers
             var order = await _repository.GetById(request.OrderId);
             if (order == null) return null;
 
-            return _mapper.Map<OrderDTO>(order);
+            var orderDto = _mapper.Map<OrderDTO>(order);
+            orderDto.InvoiceCreditCardNumber = _dataProtector.Unprotect(orderDto.InvoiceCreditCardNumber);
+            return orderDto;
         }
     }
 }

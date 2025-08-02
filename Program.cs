@@ -5,6 +5,10 @@ using Paessler.Task.Model;
 using Paessler.Task.Services.Repositories;
 using Paessler.Task.Services.Repositories.IRepositories;
 using Paessler.Task.Services.Mappers;
+using Paessler.Task.Services.Validators;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,13 @@ builder.Services.AddCors(options =>
     });
 });
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("Logs/app_log.txt", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .MinimumLevel.Warning()
+    .CreateLogger();
+    
+builder.Host.UseSerilog();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -36,7 +47,10 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddDataProtection();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+//builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<OrderDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CustomerDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ProductOrderedDTOValidator>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 var app = builder.Build();

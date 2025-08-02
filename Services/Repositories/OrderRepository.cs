@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Paessler.Task.Model;
 using Paessler.Task.Model.Models;
@@ -13,13 +14,17 @@ namespace Paessler.Task.Services.Repositories
         private readonly IMapper _mapper;
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
-
-        public OrderRepository(PostgresContext context, IMapper mapper, ICustomerRepository customerRepository, IProductRepository productRepository)
+        private readonly IValidator<OrderDTO> _orderValidator;
+        private readonly ILogger<OrderRepository> _logger;
+        public OrderRepository(PostgresContext context, IMapper mapper, ICustomerRepository customerRepository, IProductRepository productRepository,
+        IValidator<OrderDTO> orderValidator, ILogger<OrderRepository> logger)
         {
             _context = context;
             _mapper = mapper;
             _customerRepository = customerRepository;
             _productRepository = productRepository;
+            _orderValidator = orderValidator;
+            _logger = logger;
         }
 
         public async Task<Order> GetById(int id)
@@ -32,23 +37,42 @@ namespace Paessler.Task.Services.Repositories
 
         public async Task<Order> CreateOrderAsync(OrderDTO order)
         {
-            var orderEntity = _mapper.Map<Order>(order);
-            var customerDto = _mapper.Map<CustomerDTO>(orderEntity.Customer);
-            var customer = await _customerRepository.CreateOrUpdateCustomerAsync(customerDto);
-            orderEntity.Customer = customer;
-
-            foreach (var productOrdered in orderEntity.ProductOrdered)
+            try
             {
-                if (productOrdered.Product != null)
+                var validationResult = await _orderValidator.ValidateAsync(order);
+                if (!validationResult.IsValid)
                 {
-                    productOrdered.Product = await _productRepository.UpdateProductInventory(productOrdered.Product.id, productOrdered.amount);
-                    productOrdered.total_price = productOrdered.Product.price * productOrdered.amount;
+                    _logger.LogError("Order validation failed: {Errors}", validationResult.Errors);
+                    throw new ValidationException(validationResult.Errors);
                 }
-            }
-            _context.Orders.Add(orderEntity);
-            await _context.SaveChangesAsync();
+                var orderEntity = _mapper.Map<Order>(order);
+                var customerDto = _mapper.Map<CustomerDTO>(orderEntity.Customer);
 
-            return orderEntity;
+                _logger.LogInformation("Validating customer {email}", customerDto.InvoiceEmailAddress);
+                var customer = await _customerRepository.CreateOrUpdateCustomerAsync(customerDto);
+                _logger.LogInformation("Customer validated and retrieved: {customerId}", customer.id);
+
+                orderEntity.Customer = customer;
+
+                foreach (var productOrdered in orderEntity.ProductOrdered)
+                {
+                    if (productOrdered.Product != null)
+                    {
+                        productOrdered.Product = await _productRepository.UpdateProductInventory(productOrdered.Product.id, productOrdered.amount);
+                        productOrdered.total_price = productOrdered.Product.price * productOrdered.amount;
+                    }
+                }
+                _context.Orders.Add(orderEntity);
+                _logger.LogInformation("Order saved successfully with ID: {OrderId}", orderEntity.id);
+                await _context.SaveChangesAsync();
+
+                return orderEntity;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating order: {Message}", ex.Message);
+                throw;
+            }
         }
 
         public Task<List<Order>> GetAll()

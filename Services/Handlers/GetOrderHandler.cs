@@ -13,17 +13,23 @@ namespace Paessler.Task.Services.Handlers
         private readonly IOrderRepository _repository;
         private readonly IMapper _mapper;
         private readonly IDataProtector _dataProtector;
-        public GetOrderByIdQueryHandler(IOrderRepository repository, IMapper mapper, IDataProtectionProvider dataProtectionProvider)
+        private readonly ILogger<GetOrderByIdQueryHandler> _logger;
+        public GetOrderByIdQueryHandler(IOrderRepository repository, IMapper mapper, IDataProtectionProvider dataProtectionProvider, ILogger<GetOrderByIdQueryHandler> logger)
         {
             _repository = repository;
             _mapper = mapper;
             _dataProtector = dataProtectionProvider.CreateProtector("Customer");
+            _logger = logger;
         }
 
         public async Task<OrderDTO> Handle(GetOrderByIdCommand request, CancellationToken cancellationToken)
         {
             var order = await _repository.GetById(request.OrderId);
-            if (order == null) return null;
+            if (order == null)
+            {
+                _logger.LogError("Order not found: {OrderId}", request.OrderId);
+                return null;
+            }
 
             var orderDto = _mapper.Map<OrderDTO>(order);
             orderDto.InvoiceCreditCardNumber = _dataProtector.Unprotect(orderDto.InvoiceCreditCardNumber);

@@ -1,0 +1,23 @@
+2025-08-02 22:14:42.603 +02:00 [INF] User profile is available. Using 'C:\Users\RaimaImran\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-02 22:14:42.770 +02:00 [INF] Now listening on: http://localhost:5000
+2025-08-02 22:14:42.772 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-02 22:14:42.773 +02:00 [INF] Hosting environment: Development
+2025-08-02 22:14:42.773 +02:00 [INF] Content root path: C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo
+2025-08-02 22:14:57.563 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Order/7 - null null
+2025-08-02 22:14:57.661 +02:00 [INF] Executing endpoint 'Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById (paessler-task)'
+2025-08-02 22:14:57.708 +02:00 [INF] Route matched with {action = "GetOrderById", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Paessler.Task.Model.Models.Order]] GetOrderById(Int32) on controller Paessler.Task.WebAPI.Controllers.OrderController (paessler-task).
+2025-08-02 22:14:57.714 +02:00 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2025-08-02 22:15:06.423 +02:00 [INF] Executing OkObjectResult, writing value of type 'Paessler.Task.Services.DTOs.OrderDTO'.
+2025-08-02 22:15:06.480 +02:00 [INF] Executed action Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById (paessler-task) in 8767.1638ms
+2025-08-02 22:15:06.482 +02:00 [INF] Executed endpoint 'Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById (paessler-task)'
+2025-08-02 22:15:06.486 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Order/7 - 200 null application/json; charset=utf-8 8937.5183ms
+2025-08-02 22:15:51.668 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Order/23 - null null
+2025-08-02 22:15:51.671 +02:00 [INF] Executing endpoint 'Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById (paessler-task)'
+2025-08-02 22:15:51.671 +02:00 [INF] Route matched with {action = "GetOrderById", controller = "Order"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Paessler.Task.Model.Models.Order]] GetOrderById(Int32) on controller Paessler.Task.WebAPI.Controllers.OrderController (paessler-task).
+2025-08-02 22:15:56.161 +02:00 [WRN] Order not found: 23
+2025-08-02 22:15:56.162 +02:00 [INF] Executing OkObjectResult, writing value of type 'null'.
+2025-08-02 22:15:56.163 +02:00 [INF] Executed action Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById (paessler-task) in 4492.0437ms
+2025-08-02 22:15:56.164 +02:00 [INF] Executed endpoint 'Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById (paessler-task)'
+2025-08-02 22:15:56.165 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Order/23 - 204 null null 4497.0491ms
+2025-08-02 22:18:25.515 +02:00 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2025-08-02 22:18:32.288 +02:00 [ERR] Order not found: 23

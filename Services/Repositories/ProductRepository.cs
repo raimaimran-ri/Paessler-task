@@ -26,6 +26,16 @@ namespace Paessler.Task.Services.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<int> GetInventoryAmountAsync(int productId)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                throw new KeyNotFoundException($"Product with ID {productId} not found.");
+            }
+            return product.inventory_amount;
+        }
+
         public async Task<Product> UpdateProductInventory(int productId, int amount)
         {
             var product = _context.Products.Find(productId);

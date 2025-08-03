@@ -7,9 +7,9 @@ namespace Paessler.Task.Services.Repositories.IRepositories
     public interface IOrderRepository: IBaseRepository<Order>
     {
         /// <summary>
-        /// This method takes an OrderDTO object and creates a new order.
+        /// This method takes an Order object and creates a new order.
         /// </summary>
         /// <returns>This method returns an Order object after creation.</returns>
-        Task<Order> CreateOrderAsync(OrderDTO order);
+        Task<Order> CreateOrderAsync(Order order);
     }
 }

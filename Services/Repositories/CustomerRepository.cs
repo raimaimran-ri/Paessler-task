@@ -23,44 +23,18 @@ namespace Paessler.Task.Services.Repositories
             _logger = logger;
         }
 
-        public async Task<Customer> CreateOrUpdateCustomerAsync(CustomerDTO customer)
+        public async Task<Customer> CreateCustomerAsync(Customer customer)
         {
             try
             {
-                var result = await _customerValidator.ValidateAsync(customer);
-                if (!result.IsValid)
-                {
-                    _logger.LogError("Customer validation failed: {Errors}", result.Errors);
-                    throw new ValidationException(result.Errors);
-                }
+                _context.Customers.Add(customer);
+                await _context.SaveChangesAsync();
+                return customer;
 
-                var existingCustomer = await GetByEmailAndAddressAsync(customer.InvoiceEmailAddress, customer.InvoiceAddress);
-                if (existingCustomer == null)
-                {
-                    var customerEntity = new Customer
-                    {
-                        email = customer.InvoiceEmailAddress,
-                        address = customer.InvoiceAddress,
-                        credit_card_number = customer.InvoiceCreditCardNumber
-                    };
-                    _context.Customers.Add(customerEntity);
-                    await _context.SaveChangesAsync();
-                    _logger.LogInformation("New customer created with ID: {CustomerId}", customerEntity.id);
-                    return customerEntity;
-                }
-                else
-                {
-                    var encryptedCardNumber = _dataProtector.Protect(customer.InvoiceCreditCardNumber);
-                    existingCustomer.credit_card_number = encryptedCardNumber;
-                    _context.Customers.Update(existingCustomer);
-                    await _context.SaveChangesAsync();
-                    _logger.LogInformation("Customer updated with ID: {CustomerId}", existingCustomer.id);
-                    return existingCustomer;
-                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating or updating customer: {Message}", ex.Message);
+                _logger.LogError(ex, "Error creating customer: {Message}", ex.Message);
                 throw;
             }
 
@@ -82,5 +56,18 @@ namespace Paessler.Task.Services.Repositories
                 .FirstOrDefaultAsync(c => c.email == email && c.address == address);
         }
 
+        public Task<Customer> UpdateCustomerAsync(Customer customer)
+        {
+            try
+            {
+                _context.Customers.Update(customer);
+                return _context.SaveChangesAsync().ContinueWith(t => customer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating customer: {Message}", ex.Message);
+                throw;
+            }
+        }
     }
 }

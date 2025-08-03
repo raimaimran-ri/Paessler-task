@@ -1,0 +1,61 @@
+2025-08-03 01:11:27.412 +02:00 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2025-08-03 01:11:31.803 +02:00 [ERR] An error occurred while creating order: The method or operation is not implemented.
+2025-08-03 01:11:31.923 +02:00 [ERR] Stack trace:    at Paessler.Task.Services.Repositories.ProductRepository.GetById(Int32 id) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\Services\Repositories\ProductRepository.cs:line 26
+   at Paessler.Task.Services.Handlers.UpdateProductInventoryHandler.Handle(UpdateProductInventoryCommand request, CancellationToken cancellationToken) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\Services\Handlers\UpdateProductInventoryHandler.cs:line 26
+   at Paessler.Task.Services.Handlers.CreateOrderHandler.Handle(CreateOrderCommand request, CancellationToken cancellationToken) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\Services\Handlers\CreateOrderHandler.cs:line 53
+   at Paessler.Task.WebAPI.Controllers.OrderController.CreateOrder(OrderDTO orderDTO) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\WebAPI\Controllers\OrdersController.cs:line 52
+2025-08-03 01:16:12.243 +02:00 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2025-08-03 01:16:44.123 +02:00 [ERR] Error creating customer: An error occurred while saving the entity changes. See the inner exception for details.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23505: duplicate key value violates unique constraint "customer_pkey"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|234_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23505
+    MessageText: duplicate key value violates unique constraint "customer_pkey"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: customer
+    ConstraintName: customer_pkey
+    File: nbtinsert.c
+    Line: 673
+    Routine: _bt_check_unique
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Paessler.Task.Services.Repositories.CustomerRepository.CreateCustomerAsync(Customer customer) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\Services\Repositories\CustomerRepository.cs:line 31
+2025-08-03 01:16:44.828 +02:00 [ERR] An error occurred while creating order: One or more errors occurred. (An error occurred while saving the entity changes. See the inner exception for details.)
+2025-08-03 01:16:44.831 +02:00 [ERR] Stack trace:    at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at Paessler.Task.Services.Handlers.CreateOrderHandler.Handle(CreateOrderCommand request, CancellationToken cancellationToken) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\Services\Handlers\CreateOrderHandler.cs:line 41
+   at Paessler.Task.WebAPI.Controllers.OrderController.CreateOrder(OrderDTO orderDTO) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\WebAPI\Controllers\OrdersController.cs:line 52
+2025-08-03 01:19:12.953 +02:00 [ERR] An error occured when retreiving order: An error occurred during a cryptographic operation. Refer to the inner exception for more information.
+2025-08-03 01:19:12.954 +02:00 [ERR] Stack trace:    at Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.Unprotect(IDataProtector protector, String protectedData)
+   at Paessler.Task.Services.Handlers.GetOrderByIdQueryHandler.Handle(GetOrderByIdCommand request, CancellationToken cancellationToken) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\Services\Handlers\GetOrderHandler.cs:line 35
+   at Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById(Int32 id) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\WebAPI\Controllers\OrdersController.cs:line 35
+2025-08-03 01:19:43.101 +02:00 [ERR] An error occured when retreiving order: An error occurred during a cryptographic operation. Refer to the inner exception for more information.
+2025-08-03 01:19:43.102 +02:00 [ERR] Stack trace:    at Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.Unprotect(IDataProtector protector, String protectedData)
+   at Paessler.Task.Services.Handlers.GetOrderByIdQueryHandler.Handle(GetOrderByIdCommand request, CancellationToken cancellationToken) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\Services\Handlers\GetOrderHandler.cs:line 35
+   at Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById(Int32 id) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\WebAPI\Controllers\OrdersController.cs:line 35
+2025-08-03 01:21:47.552 +02:00 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2025-08-03 01:21:55.568 +02:00 [ERR] An error occured when retreiving order: An error occurred during a cryptographic operation. Refer to the inner exception for more information.
+2025-08-03 01:21:55.632 +02:00 [ERR] Stack trace:    at Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.Unprotect(IDataProtector protector, String protectedData)
+   at Paessler.Task.Services.Handlers.GetOrderByIdQueryHandler.Handle(GetOrderByIdCommand request, CancellationToken cancellationToken) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\Services\Handlers\GetOrderHandler.cs:line 35
+   at Paessler.Task.WebAPI.Controllers.OrderController.GetOrderById(Int32 id) in C:\Users\RaimaImran\Desktop\Job related\Paessler-Repo\WebAPI\Controllers\OrdersController.cs:line 35

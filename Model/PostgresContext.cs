@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph;
 using Paessler.Task.Model.Models;
 
 namespace Paessler.Task.Model;
@@ -9,15 +10,12 @@ public class PostgresContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<ProductOrdered> OrderedProducts { get; set; }
 
-    public PostgresContext()
+    public PostgresContext(DbContextOptions<PostgresContext> options)
+        : base(options)
     {
         _connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql(_connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

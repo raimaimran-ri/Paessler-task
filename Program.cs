@@ -9,6 +9,8 @@ using Paessler.Task.Services.Validators;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Serilog;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,8 +41,13 @@ builder.Services.AddSwaggerGen(options =>
 
 });
 
+builder.Services.AddDbContext<PostgresContext>(options =>
+{
+    var connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
+    options.UseNpgsql(connectionString);
+});
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddSingleton<PostgresContext>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -68,3 +75,5 @@ else
 app.UseCors("allowAny");
 app.MapControllers();
 app.Run();
+
+public partial class Program { }

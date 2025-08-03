@@ -21,9 +21,9 @@ namespace Paessler.Task.Services.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetById(int id)
+        public async Task<Product> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Products.FindAsync(id);
         }
 
         public async Task<int> GetInventoryAmountAsync(int productId)
@@ -36,14 +36,9 @@ namespace Paessler.Task.Services.Repositories
             return product.inventory_amount;
         }
 
-        public async Task<Product> UpdateProductInventory(int productId, int amount)
+        public async Task<Product> UpdateProductInventory(Product product)
         {
-            var product = _context.Products.Find(productId);
-            if (product == null) 
-            {
-                throw new KeyNotFoundException($"Product with ID {productId} not found.");
-            }
-            product.inventory_amount -= amount;
+            _context.Products.Update(product);
             await _context.SaveChangesAsync();
             return product;
         }

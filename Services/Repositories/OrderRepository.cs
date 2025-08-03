@@ -35,38 +35,16 @@ namespace Paessler.Task.Services.Repositories
                 .FirstOrDefaultAsync(o => o.id == id);
         }
 
-        public async Task<Order> CreateOrderAsync(OrderDTO order)
+        public async Task<Order> CreateOrderAsync(Order order)
         {
             try
             {
-                var validationResult = await _orderValidator.ValidateAsync(order);
-                if (!validationResult.IsValid)
-                {
-                    _logger.LogError("Order validation failed: {Errors}", validationResult.Errors);
-                    throw new ValidationException(validationResult.Errors);
-                }
-                var orderEntity = _mapper.Map<Order>(order);
-                var customerDto = _mapper.Map<CustomerDTO>(orderEntity.Customer);
-
-                _logger.LogInformation("Validating customer {email}", customerDto.InvoiceEmailAddress);
-                var customer = await _customerRepository.CreateOrUpdateCustomerAsync(customerDto);
-                _logger.LogInformation("Customer validated and retrieved: {customerId}", customer.id);
-
-                orderEntity.Customer = customer;
-
-                foreach (var productOrdered in orderEntity.ProductOrdered)
-                {
-                    if (productOrdered.Product != null)
-                    {
-                        productOrdered.Product = await _productRepository.UpdateProductInventory(productOrdered.Product.id, productOrdered.amount);
-                        productOrdered.total_price = productOrdered.Product.price * productOrdered.amount;
-                    }
-                }
-                _context.Orders.Add(orderEntity);
-                _logger.LogInformation("Order saved successfully with ID: {OrderId}", orderEntity.id);
+                order.created_at = DateTime.UtcNow;
+                _context.Orders.Add(order);
+                _logger.LogInformation("Order saved successfully with ID: {OrderId}", order.id);
                 await _context.SaveChangesAsync();
 
-                return orderEntity;
+                return order;
             }
             catch (Exception ex)
             {
